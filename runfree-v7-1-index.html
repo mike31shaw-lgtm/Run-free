@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#142a25"><title>RunFree · Find your outside</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+:root{color-scheme:dark;--bg:#0b1718;--panel:#142426;--line:#2e4242;--muted:#9bb4b0;--accent:#bbf16b;--text:#f2f8f3}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif}button,select,input{font:inherit}button{cursor:pointer}header{padding:18px 20px 13px;display:flex;justify-content:space-between;align-items:center}h1{font-size:27px;letter-spacing:-1px;margin:0}h1 span{color:var(--accent)}.tag{color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase}.app{max-width:1180px;margin:auto}.layout{display:grid;grid-template-columns:360px 1fr;gap:14px;padding:0 14px 16px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px}.muted{color:var(--muted)}.intro{font-size:13px;margin:5px 0 22px}.heading{font-size:23px;font-weight:800;line-height:1.12;margin:0 0 5px}label{display:block;font-size:12px;font-weight:700;margin-bottom:9px;color:var(--muted)}.seg{display:flex;gap:7px;margin:0 0 20px;flex-wrap:wrap}.seg button{border:1px solid #415554;border-radius:12px;background:#1c3031;color:#eaf6ef;padding:11px 12px;min-width:53px;font-weight:700}.distance-control{display:flex;align-items:center;gap:8px;margin:0 0 11px}.distance-control button{background:#1c3031;border:1px solid #415554;color:var(--text);border-radius:11px;padding:10px 16px;font-size:22px}.distance-control input{width:95px;min-width:70px;background:#0c1d1e;border:1px solid #47635b;border-radius:11px;padding:12px 8px;color:var(--accent);text-align:center;font-size:23px;font-weight:800}.distance-unit{color:var(--muted);font-size:12px}.seg button.active{background:var(--accent);border-color:var(--accent);color:#142416}.large{background:var(--accent);color:#132518;border:0;width:100%;padding:15px;border-radius:13px;font-weight:800;margin-top:8px}.large:disabled{opacity:.5}.secondary{border:1px solid #49625d;border-radius:11px;padding:11px;background:#1b3030;color:var(--text);font-weight:650}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}.field{background:#0c1d1e;border:1px solid #385150;border-radius:11px;padding:11px;color:var(--text);width:100%}.info{background:#192f2e;border:1px solid #3e5851;padding:13px;border-radius:13px;margin-top:17px;font-size:13px;line-height:1.55}.info strong{color:var(--accent)}.results{margin-top:15px;display:none}.stats{display:flex;gap:8px;margin:12px 0}.stat{flex:1;background:#0d1e1e;border-radius:12px;padding:11px 8px}.stat b{display:block;font-size:20px}.stat small{color:var(--muted)}.map-wrap{position:relative;border:1px solid var(--line);border-radius:20px;overflow:hidden;min-height:620px}#map{height:100%;min-height:620px;background:#1b2c2b}.floating{position:absolute;top:12px;right:12px;z-index:600;background:#102222ed;color:#f2f8f3;border-radius:13px;padding:9px 12px;font-size:12px;max-width:210px}.floating input{accent-color:#b8ee6b}#message{font-size:13px;min-height:18px;color:#cee5c9;margin-top:12px}.tiny{font-size:11px;color:#9cb3b1;line-height:1.45;margin:12px 2px}.savedItem{display:flex;align-items:center;gap:9px;margin-top:8px;background:#0e1e1e;padding:10px;border-radius:10px}.savedItem button{background:transparent;color:#d3e5df;border:0;text-align:left;flex:1}.savedItem .del{flex:0;color:#ffb3a9}.footer{text-align:center;color:#829e99;font-size:11px;padding:0 20px 20px}.home-marker{background:#b7f067;width:17px;height:17px;border:3px solid white;border-radius:50%;box-shadow:0 0 0 6px #b7f06755}@media(max-width:780px){header{padding:15px 15px 9px}.layout{display:flex;flex-direction:column;padding:0 9px 12px;gap:9px}.panel{padding:16px;border-radius:16px}.map-wrap{min-height:420px;order:-1;border-radius:16px}#map{min-height:420px;height:420px}.intro{margin-bottom:15px}.stats{margin:9px 0}.floating{font-size:11px}.seg{margin-bottom:13px}h1{font-size:24px}}
+
+/* RunFree V5: a calmer, nature-led identity */
+:root{--bg:#10221f;--panel:#182d28;--line:#385044;--muted:#b4c5b6;--accent:#dfb879;--text:#f4f0e5}
+body{background:radial-gradient(ellipse at 0% 0%,#2e4032 0,transparent 42%),linear-gradient(150deg,#112620,#172820 55%,#10211e);color:var(--text)}
+header{padding-top:24px;padding-bottom:20px}h1{font-family:Georgia,'Times New Roman',serif;font-weight:600;font-size:35px;letter-spacing:-1.5px}h1 span{color:#dbb476}.tag{color:#c6ae86;letter-spacing:2.7px;font-size:10px}
+.panel{background:linear-gradient(155deg,rgba(41,61,47,.98),rgba(21,43,37,.99));border-color:#52604d;box-shadow:0 14px 40px #07171236}
+.eyebrow{color:#dfb879;font-size:10px;font-weight:750;letter-spacing:2.2px;margin-bottom:13px}
+.heading{font:normal 38px/1.07 Georgia,'Times New Roman',serif;letter-spacing:-1px;margin-bottom:15px}
+.heading em{font-weight:normal;color:#dcb779}.thought{font:italic 17px/1.5 Georgia,serif;color:#f2e2c7;margin:0 0 11px;max-width:310px}
+.intro{font-size:12.5px;line-height:1.6;color:#b9c8b9;max-width:320px;margin-bottom:24px}
+label{letter-spacing:1.2px;font-size:10px;color:#c6cdbb}.field{background:#122923;border:1px solid #526954;border-radius:19px;color:#f8f3e7;outline-offset:2px}
+.seg button{border-radius:999px;padding:11px 16px;background:#263e32;border-color:#61715c;color:#f4f0e6;transition:background .18s,transform .18s}.seg button.active{background:#d9b878;border-color:#d9b878;color:#162720}.seg button:active,.large:active,.surprise:active{transform:scale(.985)}
+.large{border-radius:999px;background:#dfbb7c;color:#17291f;font-size:15px;padding:17px;margin-top:15px;box-shadow:0 9px 24px #050d0b35}
+.secondary{border-radius:999px;background:#263d33;border:1px solid #6a7c65;color:#fff5e8}
+.surprise{margin-top:12px;display:flex;align-items:center;text-align:left;gap:13px;width:100%;padding:14px 16px;border:1px solid #697b65;border-radius:24px;background:linear-gradient(110deg,#345443,#263e33);color:#fff8eb}
+.surprise span:nth-child(2){flex:1}.surprise strong{display:block;font:italic 19px Georgia,serif;font-weight:normal}.surprise small{display:block;color:#ced8c6;margin-top:4px;font-size:11px}.surpriseIcon{font-size:28px;color:#e2c386}
+.locationTools{margin:11px 0 20px}.postcodeRow{display:flex;gap:8px}.postcodeRow input{min-width:0;flex:1}.postcodeRow button{padding:11px 19px}.ghostButton{margin-top:7px;padding:10px 8px;background:transparent;border:0;color:#e5cb92;text-align:left;text-decoration:underline;text-underline-offset:3px;font-size:12px}.smallNote{font-size:11px;color:#aabfac;margin:5px 3px 0;line-height:1.4}
+.distanceControl{border-radius:22px!important;background:#19372e!important}.distanceControl button{border-radius:50%!important;background:#d2b177!important;color:#203126!important}
+.map-wrap{border-color:#65735b;box-shadow:0 14px 40px #07171230}.floating{background:#1b362eea;border:1px solid #70806a}.info{background:#223a30;border-color:#506a52}.info strong{color:#e6c587}
+.stats .stat{background:#19362d}.stat b{color:#ecd29d}.savedItem{background:#244035;border:1px solid #3f5b48}.savedItem button{color:#f9f5ea}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #e7cf9b;outline-offset:2px}
+@media(max-width:780px){h1{font-size:30px}.heading{font-size:35px}.panel{padding:20px}.map-wrap{min-height:390px}#map{height:390px;min-height:390px}.layout{gap:12px}}
+ .dailyNote{font-size:10px;letter-spacing:1.6px;color:#c7ad7f;margin:-8px 0 16px}.leaflet-container .run-line{stroke-linecap:round;stroke-linejoin:round}
+
+/* RunFree V6 — calm, outdoors-first UI */
+:root{--bg:#142a22;--panel:#233d30;--line:#68806a;--muted:#d0d6c6;--accent:#dfbb7c;--text:#fff4e2}
+body{background:linear-gradient(155deg,#223f31 0%,#102a23 58%,#14281f 100%)}
+.ridge-art{display:block;width:min(400px,65vw);max-width:100%;height:80px;object-fit:cover;object-position:center 69%;margin-top:4px;border-radius:2px;mix-blend-mode:screen}
+.seg button,.secondary,.large{border-radius:999px;transition:transform .13s ease,filter .13s ease}
+.seg button:active,.secondary:active,.large:active{transform:scale(.98)}
+.seg button:focus-visible,.secondary:focus-visible,.large:focus-visible{outline:3px solid #fff6dc;outline-offset:3px}
+.route-summary{grid-column:2;background:#283f33;border:1px solid #617963;border-radius:22px;padding:12px 18px;display:none}
+.route-summary:has(.results[style*="block"]){display:block}
+.route-summary .results{margin-top:0}
+.route-summary .stats{margin-top:5px}
+.route-summary .row{margin-top:13px}
+.route-summary #gpx{background:#dfbb7c;color:#14251b;border:0;font-weight:800}
+.route-summary #save{background:#344f3f}
+.route-summary .tiny{font-size:12px;line-height:1.5}
+@media(min-width:781px){.panel{grid-row:1 / span 2;grid-column:1}.map-wrap{grid-row:1;grid-column:2}.route-summary{grid-row:2}}
+@media(max-width:780px){.route-summary{order:0;margin:0 1px;border-radius:18px;padding:14px}.panel{order:1}.map-wrap{order:-1}.ridge-art{width:min(330px,75vw);height:66px}.route-summary .row button{min-height:50px}}
+
+.brand-line{display:flex;align-items:center;gap:13px;min-width:0}
+.brand-line h1{flex:none;white-space:nowrap}
+.ridge-art{display:block;margin:0;width:clamp(160px,29vw,330px);height:70px;object-fit:cover;object-position:center 71%;mix-blend-mode:screen;flex:0 1 auto}
+header>div:first-child{min-width:0;flex:1}
+@media(max-width:780px){
+  header{gap:8px}
+  .brand-line{gap:8px}
+  .brand-line h1{font-size:24px}
+  .ridge-art{width:clamp(120px,37vw,250px);height:63px}
+  header>.muted{font-size:10px!important;flex:0 0 auto}
+}
+</style></head><body><div class="app"><header><div><div class="tag">THE OUTSIDE IS CALLING</div><div class="brand-line"><h1>Run<span>Free</span> ↗</h1><img class="ridge-art" src="data:image/webp;base64,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" alt="A fine sandstone line drawing of a winding trail through quiet hills" decoding="async"></div></div><div class="muted" style="text-align:right;font-size:12px">LOWTON<br><b>WA3 1FS</b></div></header>
+<main class="layout"><section class="panel"><div class="eyebrow">A LITTLE SPACE TO BREATHE</div><h2 class="heading">The only way<br><em>is out.</em></h2><p class="thought" id="dailyThought">“It's not about going further. It's about choosing to go.”</p><p class="dailyNote">A THOUGHT FOR TODAY · A NEW ONE EACH DAY</p><p class="intro muted">No records to break. No pressure to perform. Just a path, a little time, and the decision to begin.</p><label>START POINT</label><select id="start" class="field"><option value="home">Home · WA3 1FS</option><option value="current">My current GPS location</option><option value="pin">Choose on the map · 📍</option></select><div class="locationTools"><label for="postcode">OR START FROM A UK POSTCODE</label><div class="postcodeRow"><input id="postcode" class="field" type="text" maxlength="9" autocomplete="postal-code" placeholder="e.g. WA3 1FS" aria-label="UK postcode"><button id="findPostcode" class="secondary" type="button">Find</button></div><button id="pinButton" class="ghostButton" type="button">📍 Place a starting pin on the map</button><div id="locationLabel" class="smallNote">Starting from home · WA3 1FS</div></div><label for="customDistance">TARGET DISTANCE (MILES)</label><div class="distance-control"><button type="button" id="minusDistance" aria-label="Reduce by half a mile">−</button><input type="number" id="customDistance" min="1" max="30" step="0.5" value="5" inputmode="decimal" aria-label="Target running distance in miles"><button type="button" id="plusDistance" aria-label="Increase by half a mile">+</button><span class="distance-unit">miles</span></div><div id="distances" class="seg"><button data-mi="3">3 mi</button><button data-mi="5" class="active">5 mi</button><button data-mi="7">7 mi</button><button data-mi="10">10 mi</button></div><p id="distanceHint" class="tiny">Choose any distance from 1–30 miles. Mixed and road routes aim closer to your target.</p><label>TERRAIN</label><div id="terrains" class="seg"><button data-terrain="road">Road</button><button data-terrain="mixed" class="active">Mixed</button><button data-terrain="offroad">Off-road 🌿</button></div><label>PACE (ESTIMATED TIME)</label><select id="pace" class="field"><option value="6">6:00 min/mile</option><option value="7">7:00 min/mile</option><option value="8">8:00 min/mile</option><option value="9">9:00 min/mile</option><option value="10">10:00 min/mile</option><option value="11" selected>11:00 min/mile</option><option value="12">12:00 min/mile</option><option value="13">13:00 min/mile</option><option value="14">14:00 min/mile</option><option value="15">15:00 min/mile</option><option value="16">16:00 min/mile</option></select><button id="generate" class="large">↗ Find my running loop</button><button id="surprise" class="surprise" type="button"><span class="surpriseIcon">✦</span><span><strong>Surprise me</strong><small>Let the day choose the direction</small></span><span aria-hidden="true">↗</span></button><div id="message" aria-live="polite">Ready when you are.</div><div class="info"><strong>How off-road works</strong><br>We look for OpenStreetMap paths and trails to help guide pedestrian routing. A mapped path is <b>not</b> proof of public right of way. Check signs, closures, field conditions and public access before running.</div><div style="margin-top:17px"><label>SAVED RUNS <span id="count">(0)</span></label><div id="savedList" class="muted" style="font-size:13px">Your favourites will appear here.</div></div></section><div class="map-wrap"><div id="map"></div><input id="showpaths" type="checkbox" hidden aria-hidden="true"></div><section class="route-summary" id="route-summary" aria-label="Your route details"><div class="results" id="results"><div class="eyebrow">YOUR NEXT WAY OUT</div><h2 class="heading" style="font-size:21px;margin:6px 0 12px">Your route is ready.</h2><div class="stats"><div class="stat"><b id="actual">—</b><small>Route miles</small></div><div class="stat"><b id="estimate">—</b><small>Est. time</small></div><div class="stat"><b id="difference">—</b><small>vs target</small></div></div><div class="row"><button id="save" class="secondary">♡ Save run</button><button id="gpx" class="secondary" title="Export a GPX file for Garmin and other navigation apps">↓ Download GPX</button></div><button id="another" class="secondary" style="width:100%;margin-top:8px">⟳ Try a different loop</button><div class="tiny" id="routeNote"></div></div></section></main><div class="footer">RunFree V7.1 • © OpenStreetMap contributors • Map: OpenStreetMap • Routing: Valhalla community demo • Always check access and traffic</div></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
+(()=>{'use strict';
+const HOME=[53.475726,-2.548896];let origin=[...HOME],mi=5,terrain='mixed',rotation=0,current=null,poly=null,pathLayer=L.layerGroup(),trailPoints=null,trailLoaded=false;
+const $=id=>document.getElementById(id);const map=L.map('map',{zoomControl:false}).setView(HOME,13);L.control.zoom({position:'bottomright'}).addTo(map);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'}).addTo(map);
+let homeMarker=L.marker(HOME).addTo(map).bindPopup('Start · WA3 1FS');
+const say=(s)=>$('message').textContent=s;
+// Offline, original reflections: rotate by UK calendar day, not each page refresh.
+const dailyThoughts=[
+ "It’s not about going further. It’s about choosing to go.",
+ "Some days, showing up is the whole achievement.",
+ "A familiar path can still lead to a different state of mind.",
+ "You don't need to feel ready to begin.",
+ "Let the world be bigger than the thoughts you carried outside.",
+ "Today, a little movement is enough.",
+ "The hardest part of the route can be the front door.",
+ "Routine is a quiet promise you keep to yourself.",
+ "There's no finish line for feeling alive.",
+ "A slower pace leaves more room to notice.",
+ "Go because you can, not because you must.",
+ "Sometimes the answer is simply fresh air.",
+ "Choose the path, then let the day unfold.",
+ "A small beginning still counts as beginning."
+];
+const ukDay=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+const dateNumber=Math.floor(Date.parse(ukDay+'T00:00:00Z')/86400000);
+$('dailyThought').textContent='“'+dailyThoughts[((dateNumber%dailyThoughts.length)+dailyThoughts.length)%dailyThoughts.length]+'”';
+
+let placingPin=false;let postcodeController=null;
+function updateOrigin(latlon,label){
+ if(!latlon||!latlon.every(Number.isFinite))return;
+ origin=[...latlon];homeMarker.setLatLng(origin).bindPopup(label);
+ map.setView(origin,14);trailLoaded=false;trailPoints=null;window._trailPaths=[];pathLayer.clearLayers();
+ if(poly){map.removeLayer(poly);poly=null;}current=null;$('results').style.display='none';
+ $('locationLabel').textContent=label;placingPin=false;$('pinButton').textContent='📍 Place a starting pin on the map';
+ map.getContainer().style.cursor='';say(label+' — choose your run.');
+}
+function choosePin(){placingPin=true;$('start').value='pin';map.getContainer().style.cursor='crosshair';$('pinButton').textContent='Tap anywhere on the map…';say('Tap a safe, accessible location on the map to set your start.');map.scrollWheelZoom.disable();}
+$('pinButton').onclick=choosePin;
+map.on('click',e=>{if(placingPin)updateOrigin([e.latlng.lat,e.latlng.lng],'Custom map pin · '+e.latlng.lat.toFixed(4)+', '+e.latlng.lng.toFixed(4));});
+$('findPostcode').onclick=async()=>{
+ const raw=$('postcode').value.trim().toUpperCase().replace(/\s+/g,'');
+ if(!/^[A-Z]{1,2}\d[A-Z\d]?\d[A-Z]{2}$/.test(raw)){say('Enter a valid UK postcode, such as WA3 1FS.');return;}
+ const button=$('findPostcode');button.disabled=true;say('Finding postcode location…');
+ try{let r=await fetch('https://api.postcodes.io/postcodes/'+encodeURIComponent(raw));if(!r.ok)throw Error('Postcode not found.');
+ let d=await r.json();if(!d.result||!Number.isFinite(d.result.latitude))throw Error('No map location found.');
+ $('start').value='pin';updateOrigin([d.result.latitude,d.result.longitude],'Postcode · '+d.result.postcode);map.setZoom(15);
+ say('Postcode found. The pin marks an approximate postcode centre: move it to a suitable public start using the map pin tool.');
+ }catch(e){say('Could not find that postcode: '+e.message);}finally{button.disabled=false;}
+};
+$('postcode').addEventListener('keydown',e=>{if(e.key==='Enter'){$('findPostcode').click();e.preventDefault()}});
+$('surprise').onclick=()=>{
+ const choices=[3,4,5,6,7,8];setDistance(choices[Math.floor(Math.random()*choices.length)]);
+ terrain='offroad';selectButtons('terrains','terrain',terrain);updateDistanceHint();
+ rotation=Math.floor(Math.random()*8);say('A little adventure, chosen for you…');generate();
+};
+function selectButtons(parent,attr,value){for(const b of $(parent).querySelectorAll('button'))b.classList.toggle('active',b.dataset[attr]===String(value));}
+function setDistance(n){
+  if(!Number.isFinite(n))return;
+  mi=Math.min(30,Math.max(1,Math.round(n*2)/2));
+  $('customDistance').value=String(mi);
+  selectButtons('distances','mi',mi);
+}
+$('distances').onclick=e=>{let b=e.target.closest('button');if(b)setDistance(+b.dataset.mi)};
+$('customDistance').onchange=e=>setDistance(Number(e.target.value));
+$('minusDistance').onclick=()=>setDistance(mi-.5);
+$('plusDistance').onclick=()=>setDistance(mi+.5);
+function updateDistanceHint(){
+ $('distanceHint').textContent=terrain==='offroad'?'Trail-first mode: target is flexible (up to ~35% variation), prioritising loops with less retracing. Public access still needs verification.':'Road and mixed modes aim to stay within ~20% of your target distance.';
+}
+
+$('terrains').onclick=e=>{let b=e.target.closest('button');if(b){terrain=b.dataset.terrain;selectButtons('terrains','terrain',terrain);if(terrain==='offroad')ensureTrails(false);updateDistanceHint()}};
+$('start').onchange=async()=>{
+ const choice=$('start').value;
+ if(choice==='pin'){choosePin();return;}
+ if(choice==='home'){updateOrigin([...HOME],'Home · WA3 1FS');return;}
+ if(!navigator.geolocation){say('GPS is unavailable. Select Home or use a postcode.');$('start').value='home';return;}
+ say('Requesting your GPS location…');
+ navigator.geolocation.getCurrentPosition(p=>updateOrigin([p.coords.latitude,p.coords.longitude],'Current GPS location'),()=>{
+ say('Location not permitted. Select Home, enter a postcode or drop a pin.');$('start').value='home';
+ },{enableHighAccuracy:true,timeout:12000});
+};
+function project(latlon,km,bearing){let a=bearing*Math.PI/180, dlat=km*Math.cos(a)/111.2,dlon=km*Math.sin(a)/(111.2*Math.cos(latlon[0]*Math.PI/180));return [latlon[0]+dlat,latlon[1]+dlon]}
+function hav(a,b){const rad=x=>x*Math.PI/180,dlat=rad(b[0]-a[0]),dlon=rad(b[1]-a[1]);return 6371*2*Math.asin(Math.sqrt(Math.sin(dlat/2)**2+Math.cos(rad(a[0]))*Math.cos(rad(b[0]))*Math.sin(dlon/2)**2))}
+function bearing(a,b){return (Math.atan2((b[1]-a[1])*Math.cos(a[0]*Math.PI/180),b[0]-a[0])*180/Math.PI+360)%360}
+function decode(encoded){let index=0,lat=0,lon=0,result=[];while(index<encoded.length){for(let j=0;j<2;j++){let shift=0,r=0,b;do{b=encoded.charCodeAt(index++)-63;r|=(b&31)<<shift;shift+=5}while(b>=32);if(j===0)lat+=(r&1)?~(r>>1):(r>>1);else lon+=(r&1)?~(r>>1):(r>>1)}result.push([lat/1e6,lon/1e6])}return result}
+async function route(locations){let payload={locations:locations.map(p=>({lat:p[0],lon:p[1],type:'break'})),costing:'pedestrian',units:'miles',directions_options:{units:'miles'}};let url='https://valhalla1.openstreetmap.de/route?json='+encodeURIComponent(JSON.stringify(payload));let r=await fetch(url,{headers:{'X-Client-Id':'runfree-github-prototype'}});if(!r.ok)throw Error('Routing service unavailable ('+r.status+').');let data=await r.json();if(!data.trip||!data.trip.legs?.length)throw Error(data.error||'No connected walking route found.');let coords=[];for(const leg of data.trip.legs){let c=decode(leg.shape);coords.push(...(coords.length?c.slice(1):c))}return {coords,miles:data.trip.summary.length};}
+async function ensureTrails(render=true){if(trailLoaded){if(render)paintTrails();return}if(window._loadingTrails)return window._loadingTrails;window._loadingTrails=(async()=>{try{let q=`[out:json][timeout:20];(way[highway~"^(footway|path|bridleway|track)$"][access!~"^(private|no)$"](around:6500,${origin[0]},${origin[1]}););out geom;`;let res=await fetch('https://overpass.kumi.systems/api/interpreter',{method:'POST',body:new URLSearchParams({data:q})});if(!res.ok)throw Error('Trails unavailable');let data=await res.json();let points=[];let paths=[];for(let w of data.elements||[]){if(!w.geometry?.length)continue;let tags=w.tags||{};if(tags.access==='private'||tags.foot==='no')continue;let cs=w.geometry.map(g=>[g.lat,g.lon]);if(tags.highway==='footway'||tags.highway==='path'||tags.highway==='bridleway'){paths.push(cs);for(let i=0;i<cs.length;i+=Math.max(1,Math.floor(cs.length/8)))points.push(cs[i])}}trailPoints=points;window._trailPaths=paths;trailLoaded=true;if(render||$('showpaths').checked)paintTrails()}catch(e){trailLoaded=false;trailPoints=[];if($('showpaths').checked)say('Trail overlay unavailable. Walking routing still works.')}finally{window._loadingTrails=null}})();return window._loadingTrails}
+function paintTrails(){pathLayer.clearLayers();if(!$('showpaths').checked)return;for(const coords of window._trailPaths||[])L.polyline(coords,{color:'#8cf1a2',weight:2,opacity:.45,interactive:false}).addTo(pathLayer);pathLayer.addTo(map)}
+$('showpaths').onchange=async()=>{if($('showpaths').checked)await ensureTrails(true);else paintTrails()};
+function pickTrail(target,direction){if(!trailPoints?.length)return target;let opts=trailPoints.filter(p=>{let d=hav(origin,p);return d>.35&&d<mi*1.1&&hav(target,p)<1.1});opts.sort((a,b)=>hav(a,target)-hav(b,target));return opts[0]||target}
+
+function drawRun(coords){
+ const group=L.layerGroup().addTo(map);
+ L.polyline(coords,{color:'#fff6df',weight:10,opacity:.94,interactive:false,className:'run-line'}).addTo(group);
+ L.polyline(coords,{color:'#e72c39',weight:6,opacity:1,interactive:false,className:'run-line'}).addTo(group);
+ return group;
+}
+// Detect repeated path sections by checking positions revisited after meaningful travel.
+function repeatFraction(coords){
+ // Sample the actual route every ~20m. A second visit to the same 25m patch
+ // after at least 150m of travel is probable backtracking, not GPS noise.
+ const cells=new Map();let distance=0, revisited=0, sampled=0;
+ const key=p=>`${Math.round(p[0]*4448)},${Math.round(p[1]*4448*Math.cos(p[0]*Math.PI/180))}`;
+ for(let i=1;i<coords.length;i++){
+   const a=coords[i-1],b=coords[i],len=hav(a,b),n=Math.max(1,Math.ceil(len/.02));
+   for(let j=1;j<=n;j++){
+     const p=[a[0]+(b[0]-a[0])*j/n,a[1]+(b[1]-a[1])*j/n];
+     distance+=len/n;const k=key(p),first=cells.get(k);
+     if(first!==undefined&&distance-first>.15)revisited+=len/n;
+     else if(first===undefined)cells.set(k,distance);
+     sampled+=len/n;
+   }
+ }
+ return sampled?revisited/sampled:1;
+}
+
+function reverseTrailFraction(coords){
+  // Sample routed track at ~25 metre intervals and identify edges traversed in reverse.
+  const seen=new Set();let revisited=0,total=0;
+  const key=p=>`${Math.round(p[0]*3000)}:${Math.round(p[1]*3000*Math.cos(p[0]*Math.PI/180))}`;
+  for(let i=1;i<coords.length;i++){
+    const a=coords[i-1],b=coords[i],length=hav(a,b),steps=Math.max(1,Math.ceil(length/.025));
+    let prev=key(a);
+    for(let j=1;j<=steps;j++){
+      const p=[a[0]+(b[0]-a[0])*j/steps,a[1]+(b[1]-a[1])*j/steps],next=key(p),part=length/steps;
+      if(next!==prev){if(seen.has(next+'>'+prev))revisited+=part;seen.add(prev+'>'+next)}
+      total+=part;prev=next;
+    }
+  }
+  return total?revisited/total:1;
+}
+function candidatePoints(targetKm,angle,scale){
+  // Build a circular ring with home on its edge, rather than two points in the same direction.
+  const radius=targetKm/8.5*scale;
+  const center=project(origin,radius,angle);
+  let pts=[270,0,90].map(offset=>project(center,radius,angle+offset));
+  if(terrain==='offroad')pts=pts.map(p=>pickTrail(p,angle));
+  return [origin,...pts,origin];
+}
+async function generate(){
+  setDistance(Number($('customDistance').value));
+  const btn=$('generate');btn.disabled=true;$('results').style.display='none';$('route-summary').style.display='none';
+  say('Exploring possible loops and checking for dead ends…');
+  try{
+    if(terrain==='offroad')await ensureTrails(false);
+    const targetKm=mi*1.609344;
+    let best=null, lastError=null, viable=0;
+    const bearings=[35,125,215,305,80,260,170,350,55,145,235,325];
+    for(let attempt=0;attempt<12;attempt++){
+      const angle=bearings[(attempt+rotation)%bearings.length];
+      const scale=[.66,.75,.85,.95,1.05,.7,.81,.92,.62,1.12,.74,.88][attempt];
+      say(`Checking loop ${attempt+1} of 12 for repeated paths…`);
+      try{
+        const result=await route(candidatePoints(targetKm,angle,scale));
+        if(result.miles<.5)continue;
+        const repeat=repeatFraction(result.coords);
+        const reversed=reverseTrailFraction(result.coords);
+        const deviation=Math.abs(result.miles-mi)/mi;
+        // The off-road option permits a larger distance variation in favour of flowing loops.
+        // Reject unacceptable paths *before* ranking them. A near-perfect distance
+        // must never beat a clean, shorter loop if it has substantial retracing.
+        if(repeat>.085||reversed>.045||deviation>(terrain==='offroad'?.45:.25))continue;
+        viable++;
+        const score=(terrain==='offroad'?deviation*.18:deviation*.85)+repeat*12+reversed*22;
+        if(!best||score<best.score)best={...result,repeat,reversed,deviation,score};
+        if(repeat<.015&&reversed<.008&&deviation<(terrain==='offroad'?.30:.12))break;
+      }catch(e){lastError=e}
+    }
+    if(!best)throw Error('No clean circular route met our checks. Try another distance or direction. '+(lastError?.message||''));
+    if(best.repeat>.085||best.reversed>.045)throw Error('These paths create too many dead ends or repeated stretches. Try another direction or distance.');
+    if(best.deviation>(terrain==='offroad'?.45:.25))throw Error('Could not find a loop close enough to your chosen distance. Try another distance.');
+    current={coords:best.coords,miles:best.miles,terrain,target:mi,origin:[...origin],created:Date.now()};
+    if(poly)map.removeLayer(poly);
+    poly=drawRun(current.coords);
+    map.fitBounds(L.latLngBounds(current.coords),{padding:[28,28]});
+    $('actual').textContent=best.miles.toFixed(2);
+    const m=Math.round(best.miles*(+$('pace').value));
+    $('estimate').textContent=Math.floor(m/60)?`${Math.floor(m/60)}h ${String(m%60).padStart(2,'0')}m`:`${m} min`;
+    $('difference').textContent=(best.miles-mi>=0?'+':'')+(best.miles-mi).toFixed(2)+' mi';
+    $('routeNote').textContent=`Estimated backtracking: ${Math.round(best.repeat*100)}% revisit nearby areas, ${Math.round(best.reversed*100)}% traverse edges in reverse. `+
+      (terrain==='offroad'?'Trail-informed waypoints; public access and off-road percentage are NOT verified. ':'')+
+      'Approximate geometry check only; inspect all road crossings, access signs and the entire route before setting off.';
+    $('results').style.display='block';
+    $('route-summary').style.display='block';
+    $('route-summary').scrollIntoView({behavior:'smooth',block:'nearest'});
+    say('Best available loop found. Some paths may still repeat — check the map before setting off.');
+  }catch(err){say('No suitable loop: '+err.message+' Try a different distance or direction.');}
+  finally{btn.disabled=false}
+}
+$('generate').onclick=generate;$('another').onclick=()=>{rotation++;generate()};
+function saved(){try{return JSON.parse(localStorage.getItem('runfreeRoutes')||'[]')}catch{return []}}
+function saveRoutes(arr){try{localStorage.setItem('runfreeRoutes',JSON.stringify(arr));return true}catch{say('Browser storage unavailable — GPX export still works.');return false}}
+function redrawSaved(){let all=saved();$('count').textContent=`(${all.length})`;$('savedList').innerHTML='';if(!all.length){$('savedList').textContent='Your favourites will appear here.';return}for(let i=all.length-1;i>=0;i--){let r=all[i],item=document.createElement('div');item.className='savedItem';let open=document.createElement('button');open.textContent=`${r.miles.toFixed(2)} mi · ${r.terrain} · ${new Date(r.created).toLocaleDateString('en-GB')}`;open.onclick=()=>{current=r;if(poly)map.removeLayer(poly);poly=drawRun(r.coords);map.fitBounds(L.latLngBounds(r.coords),{padding:[28,28]});$('actual').textContent=r.miles.toFixed(2);$('difference').textContent=(r.miles-r.target).toFixed(2)+' mi';let m=Math.round(r.miles*(+$('pace').value));$('estimate').textContent=m+' min';$('results').style.display='block';$('route-summary').style.display='block';$('route-summary').scrollIntoView({behavior:'smooth',block:'nearest'});say('Saved run loaded.')};let del=document.createElement('button');del.className='del';del.textContent='✕';del.ariaLabel='Delete saved run';del.onclick=()=>{let a=saved();a.splice(i,1);saveRoutes(a);redrawSaved()};item.append(open,del);$('savedList').append(item)}}
+$('save').onclick=()=>{if(!current)return;let all=saved();all.push(current);if(saveRoutes(all)){redrawSaved();say('Run saved on this device.')}};
+$('gpx').onclick=()=>{if(!current)return;let esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;');let pts=current.coords.map(p=>`<trkpt lat="${p[0].toFixed(6)}" lon="${p[1].toFixed(6)}"/>`).join('');let xml=`<?xml version="1.0" encoding="UTF-8"?><gpx version="1.1" creator="RunFree" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>${esc('RunFree '+current.miles.toFixed(2)+' mile loop')}</name><trkseg>${pts}</trkseg></trk></gpx>`;let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([xml],{type:'application/gpx+xml'}));a.download=`runfree-${current.miles.toFixed(1)}mi.gpx`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);say('GPX downloaded. Check the route in your navigation app.')};
+redrawSaved();updateDistanceHint();setTimeout(()=>map.invalidateSize(),300);
+})();
+</script></body></html>
