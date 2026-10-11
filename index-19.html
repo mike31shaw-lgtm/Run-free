@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1a19"><title>RunFree · Find your outside</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+:root{color-scheme:dark;--bg:#0b1718;--panel:#142426;--line:#2e4242;--muted:#9bb4b0;--accent:#bbf16b;--text:#f2f8f3}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif}button,select,input{font:inherit}button{cursor:pointer}header{padding:18px 20px 13px;display:flex;justify-content:space-between;align-items:center}h1{font-size:27px;letter-spacing:-1px;margin:0}h1 span{color:var(--accent)}.tag{color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase}.app{max-width:1180px;margin:auto}.layout{display:grid;grid-template-columns:360px 1fr;gap:14px;padding:0 14px 16px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px}.muted{color:var(--muted)}.intro{font-size:13px;margin:5px 0 22px}.heading{font-size:23px;font-weight:800;line-height:1.12;margin:0 0 5px}label{display:block;font-size:12px;font-weight:700;margin-bottom:9px;color:var(--muted)}.seg{display:flex;gap:7px;margin:0 0 20px;flex-wrap:wrap}.seg button{border:1px solid #415554;border-radius:12px;background:#1c3031;color:#eaf6ef;padding:11px 12px;min-width:53px;font-weight:700}.distance-control{display:flex;align-items:center;gap:8px;margin:0 0 11px}.distance-control button{background:#1c3031;border:1px solid #415554;color:var(--text);border-radius:11px;padding:10px 16px;font-size:22px}.distance-control input{width:95px;min-width:70px;background:#0c1d1e;border:1px solid #47635b;border-radius:11px;padding:12px 8px;color:var(--accent);text-align:center;font-size:23px;font-weight:800}.distance-unit{color:var(--muted);font-size:12px}.seg button.active{background:var(--accent);border-color:var(--accent);color:#142416}.large{background:var(--accent);color:#132518;border:0;width:100%;padding:15px;border-radius:13px;font-weight:800;margin-top:8px}.large:disabled{opacity:.5}.secondary{border:1px solid #49625d;border-radius:11px;padding:11px;background:#1b3030;color:var(--text);font-weight:650}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}.field{background:#0c1d1e;border:1px solid #385150;border-radius:11px;padding:11px;color:var(--text);width:100%}.info{background:#192f2e;border:1px solid #3e5851;padding:13px;border-radius:13px;margin-top:17px;font-size:13px;line-height:1.55}.info strong{color:var(--accent)}.results{margin-top:15px;display:none}.stats{display:flex;gap:8px;margin:12px 0}.stat{flex:1;background:#0d1e1e;border-radius:12px;padding:11px 8px}.stat b{display:block;font-size:20px}.stat small{color:var(--muted)}.map-wrap{position:relative;border:1px solid var(--line);border-radius:20px;overflow:hidden;min-height:620px}#map{height:100%;min-height:620px;background:#1b2c2b}.floating{position:absolute;top:12px;right:12px;z-index:600;background:#102222ed;color:#f2f8f3;border-radius:13px;padding:9px 12px;font-size:12px;max-width:210px}.floating input{accent-color:#b8ee6b}#message{font-size:13px;min-height:18px;color:#cee5c9;margin-top:12px}.tiny{font-size:11px;color:#9cb3b1;line-height:1.45;margin:12px 2px}.savedItem{display:flex;align-items:center;gap:9px;margin-top:8px;background:#0e1e1e;padding:10px;border-radius:10px}.savedItem button{background:transparent;color:#d3e5df;border:0;text-align:left;flex:1}.savedItem .del{flex:0;color:#ffb3a9}.footer{text-align:center;color:#829e99;font-size:11px;padding:0 20px 20px}.home-marker{background:#b7f067;width:17px;height:17px;border:3px solid white;border-radius:50%;box-shadow:0 0 0 6px #b7f06755}@media(max-width:780px){header{padding:15px 15px 9px}.layout{display:flex;flex-direction:column;padding:0 9px 12px;gap:9px}.panel{padding:16px;border-radius:16px}.map-wrap{min-height:420px;order:-1;border-radius:16px}#map{min-height:420px;height:420px}.intro{margin-bottom:15px}.stats{margin:9px 0}.floating{font-size:11px}.seg{margin-bottom:13px}h1{font-size:24px}}
+</style></head><body><div class="app"><header><div><div class="tag">YOUR OUTDOORS STARTS HERE</div><h1>Run<span>Free</span> ↗</h1></div><div class="muted" style="text-align:right;font-size:12px">LOWTON<br><b>WA3 1FS</b></div></header>
+<main class="layout"><section class="panel"><h2 class="heading">Just get me outside.</h2><p class="intro muted">Choose a distance, find a loop, and go.</p><label>START POINT</label><select id="start" class="field"><option value="home">Home · WA3 1FS</option><option value="current">My current GPS location</option></select><div style="height:18px"></div><label for="customDistance">TARGET DISTANCE (MILES)</label><div class="distance-control"><button type="button" id="minusDistance" aria-label="Reduce by half a mile">−</button><input type="number" id="customDistance" min="1" max="30" step="0.5" value="5" inputmode="decimal" aria-label="Target running distance in miles"><button type="button" id="plusDistance" aria-label="Increase by half a mile">+</button><span class="distance-unit">miles</span></div><div id="distances" class="seg"><button data-mi="3">3 mi</button><button data-mi="5" class="active">5 mi</button><button data-mi="7">7 mi</button><button data-mi="10">10 mi</button></div><p id="distanceHint" class="tiny">Choose any distance from 1–30 miles. Mixed and road routes aim closer to your target.</p><label>TERRAIN</label><div id="terrains" class="seg"><button data-terrain="road">Road</button><button data-terrain="mixed" class="active">Mixed</button><button data-terrain="offroad">Off-road 🌿</button></div><label>PACE (ESTIMATED TIME)</label><select id="pace" class="field"><option value="9">9:00 min/mile</option><option value="10">10:00 min/mile</option><option value="11" selected>11:00 min/mile</option><option value="12">12:00 min/mile</option><option value="13">13:00 min/mile</option></select><button id="generate" class="large">↗ Find my running loop</button><div id="message" aria-live="polite">Ready when you are.</div><div class="results" id="results"><div class="stats"><div class="stat"><b id="actual">—</b><small>Route miles</small></div><div class="stat"><b id="estimate">—</b><small>Est. time</small></div><div class="stat"><b id="difference">—</b><small>vs target</small></div></div><div class="row"><button id="save" class="secondary">♡ Save run</button><button id="gpx" class="secondary">↓ Download GPX</button></div><button id="another" class="secondary" style="width:100%;margin-top:8px">⟳ Try a different loop</button><div class="tiny" id="routeNote"></div></div><div class="info"><strong>How off-road works</strong><br>We look for OpenStreetMap paths and trails to help guide pedestrian routing. A mapped path is <b>not</b> proof of public right of way. Check signs, closures, field conditions and public access before running.</div><div style="margin-top:17px"><label>SAVED RUNS <span id="count">(0)</span></label><div id="savedList" class="muted" style="font-size:13px">Your favourites will appear here.</div></div></section><div class="map-wrap"><div id="map"></div><label class="floating"><input id="showpaths" type="checkbox"> Show mapped trails<br><span class="muted" style="font-size:10px">Paths ≠ confirmed rights of way</span></label></div></main><div class="footer">RunFree V3 • © OpenStreetMap contributors • Map: OpenStreetMap • Routing: Valhalla community demo • Always check access and traffic</div></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
+(()=>{'use strict';
+const HOME=[53.475726,-2.548896];let origin=[...HOME],mi=5,terrain='mixed',rotation=0,current=null,poly=null,pathLayer=L.layerGroup(),trailPoints=null,trailLoaded=false;
+const $=id=>document.getElementById(id);const map=L.map('map',{zoomControl:false}).setView(HOME,13);L.control.zoom({position:'bottomright'}).addTo(map);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'}).addTo(map);
+let homeMarker=L.marker(HOME).addTo(map).bindPopup('Start · WA3 1FS');
+const say=(s)=>$('message').textContent=s;
+function selectButtons(parent,attr,value){for(const b of $(parent).querySelectorAll('button'))b.classList.toggle('active',b.dataset[attr]===String(value));}
+function setDistance(n){
+  if(!Number.isFinite(n))return;
+  mi=Math.min(30,Math.max(1,Math.round(n*2)/2));
+  $('customDistance').value=String(mi);
+  selectButtons('distances','mi',mi);
+}
+$('distances').onclick=e=>{let b=e.target.closest('button');if(b)setDistance(+b.dataset.mi)};
+$('customDistance').onchange=e=>setDistance(Number(e.target.value));
+$('minusDistance').onclick=()=>setDistance(mi-.5);
+$('plusDistance').onclick=()=>setDistance(mi+.5);
+function updateDistanceHint(){
+ $('distanceHint').textContent=terrain==='offroad'?'Trail-first mode: target is flexible (up to ~35% variation), prioritising loops with less retracing. Public access still needs verification.':'Road and mixed modes aim to stay within ~20% of your target distance.';
+}
+
+$('terrains').onclick=e=>{let b=e.target.closest('button');if(b){terrain=b.dataset.terrain;selectButtons('terrains','terrain',terrain);if(terrain==='offroad')ensureTrails(false);updateDistanceHint()}};
+$('start').onchange=async()=>{if($('start').value==='home'){origin=[...HOME];homeMarker.setLatLng(origin);map.setView(origin,13);say('Starting from WA3 1FS.');return}if(!navigator.geolocation){say('GPS is not available on this device.');$('start').value='home';return}say('Requesting your location…');navigator.geolocation.getCurrentPosition(p=>{origin=[p.coords.latitude,p.coords.longitude];homeMarker.setLatLng(origin);map.setView(origin,13);trailLoaded=false;trailPoints=null;pathLayer.clearLayers();say('Current location set.');},()=>{say('Location not permitted. Using home.');$('start').value='home';origin=[...HOME]},{enableHighAccuracy:true,timeout:12000})};
+function project(latlon,km,bearing){let a=bearing*Math.PI/180, dlat=km*Math.cos(a)/111.2,dlon=km*Math.sin(a)/(111.2*Math.cos(latlon[0]*Math.PI/180));return [latlon[0]+dlat,latlon[1]+dlon]}
+function hav(a,b){const rad=x=>x*Math.PI/180,dlat=rad(b[0]-a[0]),dlon=rad(b[1]-a[1]);return 6371*2*Math.asin(Math.sqrt(Math.sin(dlat/2)**2+Math.cos(rad(a[0]))*Math.cos(rad(b[0]))*Math.sin(dlon/2)**2))}
+function bearing(a,b){return (Math.atan2((b[1]-a[1])*Math.cos(a[0]*Math.PI/180),b[0]-a[0])*180/Math.PI+360)%360}
+function decode(encoded){let index=0,lat=0,lon=0,result=[];while(index<encoded.length){for(let j=0;j<2;j++){let shift=0,r=0,b;do{b=encoded.charCodeAt(index++)-63;r|=(b&31)<<shift;shift+=5}while(b>=32);if(j===0)lat+=(r&1)?~(r>>1):(r>>1);else lon+=(r&1)?~(r>>1):(r>>1)}result.push([lat/1e6,lon/1e6])}return result}
+async function route(locations){let payload={locations:locations.map(p=>({lat:p[0],lon:p[1],type:'break'})),costing:'pedestrian',units:'miles',directions_options:{units:'miles'}};let url='https://valhalla1.openstreetmap.de/route?json='+encodeURIComponent(JSON.stringify(payload));let r=await fetch(url,{headers:{'X-Client-Id':'runfree-github-prototype'}});if(!r.ok)throw Error('Routing service unavailable ('+r.status+').');let data=await r.json();if(!data.trip||!data.trip.legs?.length)throw Error(data.error||'No connected walking route found.');let coords=[];for(const leg of data.trip.legs){let c=decode(leg.shape);coords.push(...(coords.length?c.slice(1):c))}return {coords,miles:data.trip.summary.length};}
+async function ensureTrails(render=true){if(trailLoaded){if(render)paintTrails();return}if(window._loadingTrails)return window._loadingTrails;window._loadingTrails=(async()=>{try{let q=`[out:json][timeout:20];(way[highway~"^(footway|path|bridleway|track)$"][access!~"^(private|no)$"](around:6500,${origin[0]},${origin[1]}););out geom;`;let res=await fetch('https://overpass.kumi.systems/api/interpreter',{method:'POST',body:new URLSearchParams({data:q})});if(!res.ok)throw Error('Trails unavailable');let data=await res.json();let points=[];let paths=[];for(let w of data.elements||[]){if(!w.geometry?.length)continue;let tags=w.tags||{};if(tags.access==='private'||tags.foot==='no')continue;let cs=w.geometry.map(g=>[g.lat,g.lon]);if(tags.highway==='footway'||tags.highway==='path'||tags.highway==='bridleway'){paths.push(cs);for(let i=0;i<cs.length;i+=Math.max(1,Math.floor(cs.length/8)))points.push(cs[i])}}trailPoints=points;window._trailPaths=paths;trailLoaded=true;if(render||$('showpaths').checked)paintTrails()}catch(e){trailLoaded=false;trailPoints=[];if($('showpaths').checked)say('Trail overlay unavailable. Walking routing still works.')}finally{window._loadingTrails=null}})();return window._loadingTrails}
+function paintTrails(){pathLayer.clearLayers();if(!$('showpaths').checked)return;for(const coords of window._trailPaths||[])L.polyline(coords,{color:'#8cf1a2',weight:2,opacity:.45,interactive:false}).addTo(pathLayer);pathLayer.addTo(map)}
+$('showpaths').onchange=async()=>{if($('showpaths').checked)await ensureTrails(true);else paintTrails()};
+function pickTrail(target,direction){if(!trailPoints?.length)return target;let opts=trailPoints.filter(p=>{let d=hav(origin,p);return d>.35&&d<mi*1.1&&hav(target,p)<1.1});opts.sort((a,b)=>hav(a,target)-hav(b,target));return opts[0]||target}
+// Detect repeated path sections by checking positions revisited after meaningful travel.
+function repeatFraction(coords){
+  let seen=new Map(), repeat=0, total=0, along=0;
+  const cell=p=>`${Math.round(p[0]*4448)},${Math.round(p[1]*4448*Math.cos(p[0]*Math.PI/180))}`; // ~25m cells
+  for(let i=1;i<coords.length;i++){
+    const a=coords[i-1],b=coords[i],km=hav(a,b),steps=Math.max(1,Math.ceil(km/.025));
+    for(let j=1;j<=steps;j++){
+      const p=[a[0]+(b[0]-a[0])*j/steps,a[1]+(b[1]-a[1])*j/steps];
+      const key=cell(p),before=seen.get(key);
+      if(before!==undefined&&along-before>.17)repeat++;
+      seen.set(key,along);
+      total++;along+=km/steps;
+    }
+  }
+  return total?repeat/total:1;
+}
+function candidatePoints(targetKm,angle,scale){
+  // Build a circular ring with home on its edge, rather than two points in the same direction.
+  const radius=targetKm/8.5*scale;
+  const center=project(origin,radius,angle);
+  let pts=[270,0,90].map(offset=>project(center,radius,angle+offset));
+  if(terrain==='offroad')pts=pts.map(p=>pickTrail(p,angle));
+  return [origin,...pts,origin];
+}
+async function generate(){
+  setDistance(Number($('customDistance').value));
+  const btn=$('generate');btn.disabled=true;$('results').style.display='none';
+  say('Exploring possible loops and checking for dead ends…');
+  try{
+    if(terrain==='offroad')await ensureTrails(false);
+    const targetKm=mi*1.609344;
+    let best=null, lastError=null;
+    const bearings=[35,125,215,305,80,260,170,350];
+    for(let attempt=0;attempt<8;attempt++){
+      const angle=bearings[(attempt+rotation)%bearings.length];
+      const scale=attempt<4?1:1.18;
+      say(`Checking loop ${attempt+1} of 8 for repeated paths…`);
+      try{
+        const result=await route(candidatePoints(targetKm,angle,scale));
+        if(result.miles<.5)continue;
+        const repeat=repeatFraction(result.coords);
+        const deviation=Math.abs(result.miles-mi)/mi;
+        // The off-road option permits a larger distance variation in favour of flowing loops.
+        const score=(terrain==='offroad'?deviation*.3:deviation)+repeat*5;
+        if(!best||score<best.score)best={...result,repeat,deviation,score};
+        if(repeat<.075&&deviation<(terrain==='offroad'?.28:.12))break;
+      }catch(e){lastError=e}
+    }
+    if(!best)throw Error(lastError?.message||'No connected route found.');
+    if(best.repeat>.13)throw Error('The paths here force too much backtracking. Try another distance or terrain.');
+    if(best.deviation>(terrain==='offroad'?.35:.20))throw Error('Could not find a loop close enough to your chosen distance. Try another distance.');
+    current={coords:best.coords,miles:best.miles,terrain,target:mi,origin:[...origin],created:Date.now()};
+    if(poly)map.removeLayer(poly);
+    poly=L.polyline(current.coords,{color:'#baf26c',weight:5,opacity:.95}).addTo(map);
+    map.fitBounds(poly.getBounds(),{padding:[28,28]});
+    $('actual').textContent=best.miles.toFixed(2);
+    const m=Math.round(best.miles*(+$('pace').value));
+    $('estimate').textContent=Math.floor(m/60)?`${Math.floor(m/60)}h ${String(m%60).padStart(2,'0')}m`:`${m} min`;
+    $('difference').textContent=(best.miles-mi>=0?'+':'')+(best.miles-mi).toFixed(2)+' mi';
+    $('routeNote').textContent=`Approximate repeated-path check: ${Math.round(best.repeat*100)}% of route points revisit earlier areas. `+
+      (terrain==='offroad'?'Trail-informed waypoints; public access and off-road percentage are NOT verified. ':'')+
+      'Review crossings, access signs and the entire route before setting off.';
+    $('results').style.display='block';
+    say('Best available loop found — inspect the full route before running.');
+  }catch(err){say('No suitable loop: '+err.message+' Try a different distance or direction.');}
+  finally{btn.disabled=false}
+}
+$('generate').onclick=generate;$('another').onclick=()=>{rotation++;generate()};
+function saved(){try{return JSON.parse(localStorage.getItem('runfreeRoutes')||'[]')}catch{return []}}
+function saveRoutes(arr){try{localStorage.setItem('runfreeRoutes',JSON.stringify(arr));return true}catch{say('Browser storage unavailable — GPX export still works.');return false}}
+function redrawSaved(){let all=saved();$('count').textContent=`(${all.length})`;$('savedList').innerHTML='';if(!all.length){$('savedList').textContent='Your favourites will appear here.';return}for(let i=all.length-1;i>=0;i--){let r=all[i],item=document.createElement('div');item.className='savedItem';let open=document.createElement('button');open.textContent=`${r.miles.toFixed(2)} mi · ${r.terrain} · ${new Date(r.created).toLocaleDateString('en-GB')}`;open.onclick=()=>{current=r;if(poly)map.removeLayer(poly);poly=L.polyline(r.coords,{color:'#baf26c',weight:5}).addTo(map);map.fitBounds(poly.getBounds());$('actual').textContent=r.miles.toFixed(2);$('difference').textContent=(r.miles-r.target).toFixed(2)+' mi';let m=Math.round(r.miles*(+$('pace').value));$('estimate').textContent=m+' min';$('results').style.display='block';say('Saved run loaded.')};let del=document.createElement('button');del.className='del';del.textContent='✕';del.ariaLabel='Delete saved run';del.onclick=()=>{let a=saved();a.splice(i,1);saveRoutes(a);redrawSaved()};item.append(open,del);$('savedList').append(item)}}
+$('save').onclick=()=>{if(!current)return;let all=saved();all.push(current);if(saveRoutes(all)){redrawSaved();say('Run saved on this device.')}};
+$('gpx').onclick=()=>{if(!current)return;let esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;');let pts=current.coords.map(p=>`<trkpt lat="${p[0].toFixed(6)}" lon="${p[1].toFixed(6)}"/>`).join('');let xml=`<?xml version="1.0" encoding="UTF-8"?><gpx version="1.1" creator="RunFree" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>${esc('RunFree '+current.miles.toFixed(2)+' mile loop')}</name><trkseg>${pts}</trkseg></trk></gpx>`;let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([xml],{type:'application/gpx+xml'}));a.download=`runfree-${current.miles.toFixed(1)}mi.gpx`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);say('GPX downloaded. Check the route in your navigation app.')};
+redrawSaved();updateDistanceHint();setTimeout(()=>map.invalidateSize(),300);
+})();
+</script></body></html>
